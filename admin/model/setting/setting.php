@@ -18,7 +18,7 @@ class ModelSettingSetting extends Model {
 
 	public function editSetting($code, $data, $store_id = 0) {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE store_id = '" . (int)$store_id . "' AND `code` = '" . $this->db->escape($code) . "'");
-
+		
 		foreach ($data as $key => $value) {
 			if (substr($key, 0, strlen($code)) == $code) {
 				if (!is_array($value)) {

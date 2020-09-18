@@ -1156,6 +1156,7 @@
                 </div>
               </fieldset>
             </div>
+
             <div class="tab-pane" id="tab-server">
               <fieldset>
                 <legend>{{ text_general }}</legend>
@@ -1345,11 +1346,26 @@
                     <input type="text" name="config_error_filename" value="{{ config_error_filename }}" placeholder="{{ entry_error_filename }}" id="input-error-filename" class="form-control" />
                     {% if error_log %}
                     <div class="text-danger">{{ error_log }}</div>
-                    {% endif %} </div>
+                    {% endif %}
+                  </div>
                 </div>
+
+                <!-- Отправка смс когда не дозвонились -->
+                <div class="form-group">
+                  <label class="col-sm-2">
+                    Шаблон смс сообщения 'Недозвонились'
+                  </label>
+                  <div class="col-sm-10">
+                    <input type="text" name="config_smsc" id="smsc" value="{{ config_smsc }}" placeholder="[order_id] - номер заказа" class="form-control" />
+                  </div>
+                </div>
+                <!-- Отправка смс когда не дозвонились КОНЕЦ -->
+
               </fieldset>
             </div>
+
           </div>
+
         </form>
       </div>
     </div>

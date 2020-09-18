@@ -161,7 +161,15 @@ class ControllerSettingSetting extends Controller {
 		$data['cancel'] = $this->url->link('setting/store', 'user_token=' . $this->session->data['user_token'], true);
 
 		$data['user_token'] = $this->session->data['user_token'];
-
+        
+        //Отправка смс когда не дозвонились
+		if (isset($this->request->post['config_smsc'])) {
+            $data['config_smsc'] = $this->request->post['config_smsc'];
+        } else {
+            $data['config_smsc'] = $this->config->get('config_smsc');
+        }
+        //Отправка смс когда не дозвонились КОНЕЦ
+		
 		if (isset($this->request->post['config_meta_title'])) {
 			$data['config_meta_title'] = $this->request->post['config_meta_title'];
 		} else {
