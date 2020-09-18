@@ -347,7 +347,6 @@ class ModelCheckoutOrder extends Model {
 			
 			//Если статус "Недозвон" отправим смс сообщение кленту
             if($order_status_id==17){
-                
                 //Посылаем сообщение
                 //Запишем настройки sdek для уведомлений
                 $cdek_integrator_setting = $this->config->get('cdek_integrator_setting');
@@ -363,15 +362,12 @@ class ModelCheckoutOrder extends Model {
                 //Получим телефон клиента
                 $telephone = $order_info['telephone'];
                 $telephone = $str = preg_replace("/[^0-9]/", '', $telephone);;
-                //$query = $this->db->query("SELECT DISTINCT `value` FROM " . DB_PREFIX . "setting WHERE `code`='smsc' AND `key`='smsc_sms'");
-                //$sms_msg = $query->row['value'];
-                $sms_msg = $this->config->get('config_smsc');
+                $sms_msg = (string) $this->config->get('config_smsc');
                 $sms_msg = str_replace('[order_id]', $order_id, $sms_msg);
                 if(isset($telephone) and !empty($telephone) and is_numeric($telephone)){
                     if(isset($sms_api_key) and !empty($sms_api_key)){
                         //Шлем смс
                         if($sms_api_login and $sms_api_password){
-        
                             $ch = curl_init('https://smsc.ru/sys/send.php');
                             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                             curl_setopt($ch, CURLOPT_TIMEOUT, 30);
@@ -384,20 +380,13 @@ class ModelCheckoutOrder extends Model {
                             )));
                             $sms_rezult = curl_exec($ch);
                             curl_close($ch);
-                            file_put_contents(DIR_LOGS . 'sms_rezult.log', var_export($sms_rezult, true));
+                            //file_put_contents(DIR_LOGS . 'sms_rezult.log', var_export($sms_rezult, true));
+                            //file_put_contents(DIR_LOGS . 'sms_msg.log', var_export($sms_msg, true));
                         }
                         //Шлем смс конец
-                        
                     }
                 }
                 //Посылаем сообщение КОНЕЦ
-                file_put_contents(DIR_LOGS . 'telephone.log', var_export($telephone, true));
-                file_put_contents(DIR_LOGS . 'order_id.log', var_export($order_id, true));
-                file_put_contents(DIR_LOGS . 'order_info.log', var_export($order_info, true));
-                file_put_contents(DIR_LOGS . 'cdek_integrator_setting.log', var_export($sms_api_key, true));
-                file_put_contents(DIR_LOGS . 'order_status.log', 'Отправили смс...');
-            }else{
-                file_put_contents(DIR_LOGS . 'order_status.log', 'Не отправляли смс.');
             }
             //Если статус "Недозвон" отправим смс сообщение кленту КОНЕЦ
 
