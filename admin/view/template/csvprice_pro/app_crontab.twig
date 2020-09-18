@@ -1,0 +1,269 @@
+{{ header }}{{ column_left }}
+<div id="content">
+	 <div class="page-header">
+        <div class="container-fluid">
+            <ul class="breadcrumb">
+                {% for breadcrumb in breadcrumbs %}
+                    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+                    {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid csvprice_pro_container">
+        {% if warning %}
+			<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ warning }}
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+        {% endif %}
+        {% if success %}
+			<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+        {% endif %}
+        {{ app_header }}
+		{% if Template == 'form' %}
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-6">
+					<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form" class="form-horizontal form-control-sm">
+						
+						<input type="hidden" name="job_id" value="{% if job_id is defined  %}{{ job_id }}{% else %}0{% endif %}" />
+						<input type="hidden" name="job_key" value="{{ job_key ? job_key : date('U') }}" />
+						
+						<div class="form-group form-group-sm">
+							<label class="col-sm-5 control-label">{{ entry_status }}</label>
+							<div class="col-sm-7">
+								<select class="form-control input-sm" name="status">
+									{% if job.status == 1 %}
+									<option value="1" selected="selected">{{ text_enabled }}</option>
+									<option value="0">{{ text_disabled }}</option>
+									{% else %}
+									<option value="1">{{ text_enabled }}</option>
+									<option value="0" selected="selected">{{ text_disabled }}</option>
+									{% endif %}
+								</select>
+							</div>
+						</div>
+						<div class="form-group form-group-sm">
+							<label class="col-sm-5 control-label">{{ entry_job_type }}</label>
+							<div class="col-sm-7">
+								<select id="job_type" name="job_type" class="form-control input-sm">
+									{% if job.job_type == 'import' %}
+									<option value="import" selected="selected">{{ text_job_type_import }}</option>
+									<option value="export">{{ text_job_type_export }}</option>
+									{% else %}
+									<option value="import">{{ text_job_type_import }}</option>
+									<option value="export" selected="selected">{{ text_job_type_export }}</option>
+									{% endif %}
+								</select>
+							</div>
+						</div>
+						<div class="form-group form-group-sm">
+							<label class="col-sm-5 control-label">{{ entry_profile }}</label>
+							<div class="col-sm-7">
+								<select id="profile_id" name="profile_id" class="form-control input-sm">
+									{% if job.job_type == 'import' %}
+										{% set options = profile_import %}
+									{% else %}
+										{% set options = profile_export %}
+									{% endif %}
+									{% for profile in options %}
+										<option value="{{ profile.profile_id }}"{% if job.profile_id is defined and job.profile_id == profile.profile_id %} selected="selected"{% endif %}>{{ profile.name }}</option>	
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="form-group form-group-sm">
+							<label class="col-sm-5 control-label">{{ entry_job_offline }}</label>
+							<div class="col-sm-7">
+								<select class="form-control input-sm" name="job_offline">
+									{% if job.job_offline == 1 %}
+									<option value="1" selected="selected">{{ text_enabled }}</option>
+									<option value="0">{{ text_disabled }}</option>
+									{% else %}
+									<option value="1">{{ text_enabled }}</option>
+									<option value="0" selected="selected">{{ text_disabled }}</option>
+									{% endif %}
+								</select>
+							</div>
+						</div>
+						<div class="form-group form-group-sm">
+							<label class="col-sm-5 control-label">{{ entry_time_start }}</label>
+							<div class="col-sm-7">
+								<select id="job_time_start_h" name="job_time_start[H]" class="form-control" style="max-width:120px">
+									{% for h in datetime.H %}
+										{% if job.job_time_start.H is defined and job.job_time_start.H  == h %}	
+										<option value="{{ h }}" selected="selected">{{ h }}</option>
+										{% else %}
+										<option value="{{ h }}">{{ h }}</option>
+										{% endif %}
+									{% endfor %}
+								</select>
+								<select id="job_time_start_i" name="job_time_start[i]" class="form-control" style="max-width:120px; margin-top:6px;">
+									{% for i in datetime.i %}
+										{% if job.job_time_start.i is defined and job.job_time_start.i  == i %}	
+										<option value="{{ i }}" selected="selected">{{ i }}</option>
+										{% else %}
+										<option value="{{ i }}">{{ i }}</option>
+										{% endif %}
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="form-group form-group-sm">
+							<label class="col-sm-5 control-label">{{ entry_file_location }}</label>
+							<div class="col-sm-7">
+								<select id="job_file_location" class="form-control input-sm" name="job_file_location">
+									{% if job.job_file_location is defined and job.job_file_location  == 'web' %}
+									<option value="web" selected="selected">Web</option>
+									<option value="ftp">FTP</option>
+									<option value="dir">Directory</option>
+									{% elseif job.job_file_location is defined and job.job_file_location  == 'ftp' %}
+									<option value="web">Web</option>
+									<option value="ftp" selected="selected">FTP</option>
+									<option value="dir">Directory</option>
+									{% else %}
+									<option value="web">Web</option>
+									<option value="ftp">FTP</option>
+									<option value="dir" selected="selected">Directory</option>
+									{% endif %}
+								</select>
+							</div>
+						</div>
+						<div class="form-group form-group-sm csvprice_pro_ftp_data">
+							<label class="col-sm-5 control-label">{{ entry_ftp_host }}</label>
+							<div class="col-sm-7">
+								<input class="form-control input-sm" type="text" name="ftp_host" value="{{ job.ftp_host ? job.ftp_host }}" />
+							</div>
+						</div>
+						<div class="form-group form-group-sm csvprice_pro_ftp_data">
+							<label class="col-sm-5 control-label">{{ entry_ftp_user }}</label>
+							<div class="col-sm-7">
+								<input class="form-control input-sm" type="text" name="ftp_user" value="{{ job.ftp_user ? job.ftp_user }}" />
+							</div>
+						</div>
+						<div class="form-group form-group-sm csvprice_pro_ftp_data">
+							<label class="col-sm-5 control-label">{{ entry_ftp_passwd }}</label>
+							<div class="col-sm-7">
+								<input class="form-control input-sm" type="text" name="ftp_passwd" value="{{ job.ftp_passwd ? job.ftp_passwd }}" />
+							</div>
+						</div>
+						<div class="form-group form-group-sm">
+							<label class="col-sm-5 control-label">{{ entry_file_path }}</label>
+							<div class="col-sm-7">
+								<input class="form-control input-sm" type="text" name="file_path" value="{{ job.file_path ? job.file_path }}" />
+							</div>
+						</div>
+					</form>
+					<div class="row">
+						<div class="form-group form-group-sm">
+							<div class="col-sm-12">
+								<div class="pull-right">
+									<button type="button" class="btn btn-primary btn-sm" style="min-width:120px" onclick="$('#form').submit()">{{ button_save }}</button>
+									<button type="button" class="btn btn-default btn-sm" style="min-width:120px" onclick="location.replace('{{ cancel }}')">{{ button_cancel }}</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<script type="text/javascript">
+						jQuery(document).ready(function ($) {
+							var s=0,i='',e='',
+							profile_export='{% for profile in profile_export %}<option value="{{ profile.profile_id }}">{{ profile.name }} </option>{% endfor %}',
+							profile_import='{% for profile in profile_import %}<option value="{{ profile.profile_id }}">{{ profile.name }} </option>{% endfor %}';
+							$("#job_type").change(function(){
+								if( $("#job_type").val()=='import' ) {
+									$("#profile_id").html(profile_import);
+								} else {
+									$("#profile_id").html(profile_export);
+								}
+							});
+							f_file_location();
+							$("#job_file_location").change(f_file_location);
+						});
+						function f_file_location(){
+							if( $("#job_file_location").val()=='ftp' ) {
+								$(".csvprice_pro_ftp_data").show();
+							} else {
+								$(".csvprice_pro_ftp_data").hide();
+							}
+						}
+					</script>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% else %}
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form" class="form-horizontal form-control-sm">
+					<div class="text-right">
+						<button type="button" data-toggle="tooltip" title="{{ button_add }}" onclick="location.replace('{{ insert }}')" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></button>
+						<button type="button" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger btn-sm" onclick="confirm('{{ text_confirm }}') ? $('#form').submit() : false;"><i class="fa fa-trash-o"></i></button>
+					</div>
+					<table class="table table-bordered table-hover" style="margin-top:10px;">
+						<thead>
+							<tr>
+								<th width="1" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></th>
+								<th class="text-left">{{ column_profile_name }}</th>
+								<th class="text-left">{{ column_job_type }}</th>
+								<th class="text-center">{{ column_job_time_start }}</th>
+								<th class="text-left">{{ column_job_file_location }}</th>
+								<th class="text-left">{{ column_status }}</th>
+								<th class="text-center">{{ column_action }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% if jobs is defined and jobs is not empty %}
+							{% for job in jobs %}
+							{% set action = job.action %}
+							<tr id="row_job_{{ job.job_id }}">
+								<td class="text-center">
+									{% if job.selected is defined and job.selected == 1 %}
+									<input type="checkbox" name="selected[]" value="{{ job.job_id }}" checked="checked" />
+									{% else %}
+									<input type="checkbox" name="selected[]" value="{{ job.job_id }}" />
+									{% endif %}
+								</td>
+								<td class="text-left">{{ job.profile_name }}</td>
+								<td class="text-left">{{ job.job_type }}</td>
+								<td class="text-center">{{ job.job_time_start }}</td>
+								<td class="text-left">{{ job.job_file_location }}</td>
+								<td class="text-left" style="color:{{ job.color_status }}">{{ job.status }}</td>
+								<td class="text-center">
+									<a onclick="$('#job-view_{{ job.job_id }}').toggle()" data-toggle="tooltip" title="" class="btn btn-info btn-sm" data-original-title="{{ button_view }}"><i class="fa fa-eye"></i></a>
+									<a href="{{ action.edit.href }}" data-toggle="tooltip" title="" class="btn btn-primary btn-sm" data-original-title="{{  button_edit }}"><i class="fa fa-pencil"></i></a>
+								</td>
+							</tr>
+							<tr id="job-view_{{ job.job_id }}" style="display: none">
+								<td class="text-left" colspan="7">
+									{% if job.cron_cli %}
+									<p><b>cli cron job command:</b><br />
+									{{ job.cron_cli }}</p>
+									{% endif %}
+									{% if job.cron_wget %}
+									<p><b>wget cron job command:</b><br />
+									{{ job.cron_wget }}</p>
+									{% endif %}
+									{% if job.cron_curl %}
+									<p><b>curl cron job command:</b><br />
+									{{ job.cron_curl }}</p>
+									{% endif %}
+								</td>
+							</tr>
+							{% endfor %}
+							{% else %}
+							<tr>
+								<td class="text-center" colspan="7">{{ text_no_results }}</td>
+							</tr>
+							{% endif %}
+						</tbody>
+					</table>
+				</form>
+			</div>
+		</div>
+		{% endif %}
+	</div>
+</div>
+{{ footer }}
+{{ app_footer }}

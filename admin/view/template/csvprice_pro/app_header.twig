@@ -1,0 +1,13 @@
+{% if mod_demo %}
+<p>{{ mdemo_title }}</p>
+{% endif %}
+<h4>{{ csvprice_pro_heading_title }}</h4>
+<p class="csvpricepro-main_menu">
+{% for menu_item in top_menu %}
+{% if menu_item.active == 1 %}
+<a href="{{ menu_item.url }}" class="btn btn-info active">{{ menu_item.text }}</a>
+{% else %}
+<a href="{{ menu_item.url }}" class="btn btn-info">{{ menu_item.text }}</a>
+{% endif %}
+{% endfor %}
+</p>

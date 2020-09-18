@@ -1,0 +1,1200 @@
+{#
+/**
+ * @author    p0v1n0m <p0v1n0m@gmail.com>
+ * @license   Commercial
+ * @link      https://github.com/p0v1n0m
+ */
+#}
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-right">
+        <button type="button" onclick="$('#form').attr('action', '{{ action }}'); $('#form').submit()" class="btn btn-success"><i class="fas fa-save"></i> {{ button_save }}</button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-light"><i class="fas fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fas fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    {% if success %}
+    <div class="alert alert-success alert-dismissible"><i class="fas fa-check-circle"></i> {{ success }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    {% if shipping_ll_cdek_license %}
+    <div class="card">
+      <div class="card-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form">
+          <ul class="nav nav-tabs">
+            <li class="nav-item"><a href="#tab-setting" data-toggle="tab" class="nav-link active"><i class="fa fa-cogs"></i> {{ tab_setting }}</a></li>
+            <li class="nav-item"><a href="#tab-api" data-toggle="tab" class="nav-link"><i class="fas fa-exchange-alt"></i> {{ tab_api }}</a></li>
+            <li class="nav-item"><a href="#tab-delivery" data-toggle="tab" class="nav-link"><i class="fa fa-truck"></i> {{ tab_delivery }}</a></li>
+            <li class="nav-item"><a href="#tab-map" data-toggle="tab" class="nav-link"><i class="fa fa-map"></i> {{ tab_map }}</a></li>
+            <li class="nav-item"><a href="#tab-cap" data-toggle="tab" class="nav-link"><i class="fa fa-arrows-alt"></i> {{ tab_cap }}</a></li>
+            <li class="nav-item"><a href="#tab-data" data-toggle="tab" class="nav-link"><i class="fa fa-database"></i> {{ tab_data }}</a></li>
+            <li class="nav-item"><a href="#tab-log" data-toggle="tab" class="nav-link"><i class="fa fa-bars"></i> {{ tab_log }}</a></li>
+            <li class="nav-item"><a href="#tab-support" data-toggle="tab" class="nav-link"><i class="fab fa-opencart"></i> {{ tab_support }}</a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab-setting">
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_title }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="shipping_ll_cdek_title" value="{{ shipping_ll_cdek_title }}" class="form-control" />
+                  <small class="form-text text-muted">{{ help_title }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_sort_order }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="shipping_ll_cdek_sort_order" value="{{ shipping_ll_cdek_sort_order }}" class="form-control" />
+                  <small class="form-text text-muted">{{ help_sort_order }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-light bg-success">{{ entry_weight_class }}</label>
+                <div class="col-sm-10">
+                  <select name="shipping_ll_cdek_weight_class_id" class="form-control">
+                    {% for weight_class in weight_classes %}
+                    {% if weight_class.weight_class_id == shipping_ll_cdek_weight_class_id %}
+                    <option value="{{ weight_class.weight_class_id }}" selected="selected">{{ weight_class.title }}</option>
+                    {% else %}
+                    <option value="{{ weight_class.weight_class_id }}">{{ weight_class.title }}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select>
+                  <small class="form-text text-muted">{{ help_weight_class_id }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_default_weight }}</label>
+                <div class="col-sm-10">
+                  <div class="input-group">
+                    <input type="text" name="shipping_ll_cdek_default_weight" value="{{ shipping_ll_cdek_default_weight }}" class="form-control" />
+                    <div class="input-group-append">
+                      <span class="input-group-text">{{ text_kg }}</span>
+                    </div>
+                  </div>
+                  <small class="form-text text-muted">{{ help_default_weight }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-light bg-success">{{ entry_length_class }}</label>
+                <div class="col-sm-10">
+                  <select name="shipping_ll_cdek_length_class_id" class="form-control">
+                    {% for length_class in length_classes %}
+                    {% if length_class.length_class_id == shipping_ll_cdek_length_class_id %}
+                    <option value="{{ length_class.length_class_id }}" selected="selected">{{ length_class.title }}</option>
+                    {% else %}
+                    <option value="{{ length_class.length_class_id }}">{{ length_class.title }}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select>
+                  <small class="form-text text-muted">{{ help_length_class_id }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_default_dimension }}</label>
+                <div class="col-sm-10">
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">{{ entry_default_length }}</span>
+                        </div>
+                        <input type="text" name="shipping_ll_cdek_default_length" value="{{ shipping_ll_cdek_default_length }}" class="form-control" />
+                        <div class="input-group-append">
+                          <span class="input-group-text">{{ text_sm }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">{{ entry_default_width }}</span>
+                        </div>
+                        <input type="text" name="shipping_ll_cdek_default_width" value="{{ shipping_ll_cdek_default_width }}" class="form-control" />
+                        <div class="input-group-append">
+                          <span class="input-group-text">{{ text_sm }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">{{ entry_default_height }}</span>
+                        </div>
+                        <input type="text" name="shipping_ll_cdek_default_height" value="{{ shipping_ll_cdek_default_height }}" class="form-control" />
+                        <div class="input-group-append">
+                          <span class="input-group-text">{{ text_sm }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <small class="form-text text-muted">{{ help_default_dimension }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_calc_type }}</label>
+                <div class="col-sm-10">
+                  <div class="btn-group btn-group-toggle btn-group btn-group-toggle-toggle" data-toggle="buttons">
+                    <label class="btn btn-outline-secondary {% if shipping_ll_cdek_calc_type == 1 %}active{% endif %}"><input type="radio" name="shipping_ll_cdek_calc_type" value="1" autocomplete="off" {% if shipping_ll_cdek_calc_type == 1 %}checked="checked"{% endif %}>{{ text_width }}</label>
+                    <label class="btn btn-outline-secondary {% if shipping_ll_cdek_calc_type == 2 %}active{% endif %}"><input type="radio" name="shipping_ll_cdek_calc_type" value="2" autocomplete="off" {% if shipping_ll_cdek_calc_type == 2 %}checked="checked"{% endif %}>{{ text_length }}</label>
+                    <label class="btn btn-outline-secondary {% if shipping_ll_cdek_calc_type == 3 %}active{% endif %}"><input type="radio" name="shipping_ll_cdek_calc_type" value="3" autocomplete="off" {% if shipping_ll_cdek_calc_type == 3 %}checked="checked"{% endif %}>{{ text_height }}</label>
+                  </div>
+                  <small class="form-text text-muted">{{ help_calc_type }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_custom_sizes }}</label>
+                <div class="col-sm-10">
+                  <div class="btn-group btn-group-toggle btn-group btn-group-toggle-toggle" data-toggle="buttons">
+                    {% if shipping_ll_cdek_custom_sizes %}
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_custom_sizes" value="1" autocomplete="off" checked="checked">{{ text_enabled }}</label>
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_custom_sizes" value="0" autocomplete="off">{{ text_disabled }}</label>
+                    {% else %}
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_custom_sizes" value="1" autocomplete="off">{{ text_enabled }}</label>
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_custom_sizes" value="0" autocomplete="off" checked="checked">{{ text_disabled }}</label>
+                    {% endif %}
+                  </div>
+                  <br><small class="form-text text-muted">{{ help_custom_sizes }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_weight }}</label>
+                <div class="col-sm-5">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Min</span>
+                    </div>
+                    <input type="text" name="shipping_ll_cdek_min_weight" value="{{ shipping_ll_cdek_min_weight }}" class="form-control" />
+                    <div class="input-group-append">
+                      <span class="input-group-text">{{ text_kg }}</span>
+                    </div>
+                  </div>
+                  <small class="form-text text-muted">{{ help_min_weight }}</small>
+                </div>
+                <div class="col-sm-5">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Max</span>
+                    </div>
+                    <input type="text" name="shipping_ll_cdek_max_weight" value="{{ shipping_ll_cdek_max_weight }}" class="form-control" />
+                    <div class="input-group-append">
+                      <span class="input-group-text">{{ text_kg }}</span>
+                    </div>
+                  </div>
+                  <small class="form-text text-muted">{{ help_max_weight }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_total }}</label>
+                <div class="col-sm-5">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Min</span>
+                    </div>
+                    <input type="text" name="shipping_ll_cdek_min_total" value="{{ shipping_ll_cdek_min_total }}" class="form-control" />
+                    <div class="input-group-append">
+                      <span class="input-group-text">{{ text_rub }}</span>
+                    </div>
+                  </div>
+                  <small class="form-text text-muted">{{ help_min_total }}</small>
+                </div>
+                <div class="col-sm-5">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Max</span>
+                    </div>
+                    <input type="text" name="shipping_ll_cdek_max_total" value="{{ shipping_ll_cdek_max_total }}" class="form-control" />
+                    <div class="input-group-append">
+                      <span class="input-group-text">{{ text_rub }}</span>
+                    </div>
+                  </div>
+                  <small class="form-text text-muted">{{ help_max_total }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_tax_class }}</label>
+                <div class="col-sm-10">
+                  <select name="shipping_ll_cdek_tax_class_id" class="form-control">
+                    <option value="0" selected="selected">{{ text_none }}</option>
+                    {% for tax_class in tax_classes %}
+                    {% if tax_class.tax_class_id == shipping_ll_cdek_tax_class_id %}
+                    <option value="{{ tax_class.tax_class_id }}" selected="selected">{{ tax_class.title }}</option>
+                    {% else %}
+                    <option value="{{ tax_class.tax_class_id }}">{{ tax_class.title }}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_geo_zone }}</label>
+                <div class="col-sm-10">
+                  <div class="form-control" style="height: 150px; overflow: auto;">
+                    {% for geo_zone in geo_zones %}
+                    <label class="form-check">
+                      {% if geo_zone.geo_zone_id in shipping_ll_cdek_geo_zone_id %}
+                      <input type="checkbox" name="shipping_ll_cdek_geo_zone_id[]" value="{{ geo_zone.geo_zone_id }}" checked="checked" class="form-check-input" />
+                      {{ geo_zone.name }}
+                      {% else %}
+                      <input type="checkbox" name="shipping_ll_cdek_geo_zone_id[]" value="{{ geo_zone.geo_zone_id }}" class="form-check-input" />
+                      {{ geo_zone.name }}
+                      {% endif %}
+                    </label>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-light bg-success">{{ entry_status }}</label>
+                <div class="col-sm-10">
+                  <div class="btn-group btn-group-toggle btn-group btn-group-toggle-toggle" data-toggle="buttons">
+                    {% if shipping_ll_cdek_status %}
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_status" value="1" autocomplete="off" checked="checked">{{ text_enabled }}</label>
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_status" value="0" autocomplete="off">{{ text_disabled }}</label>
+                    {% else %}
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_status" value="1" autocomplete="off">{{ text_enabled }}</label>
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_status" value="0" autocomplete="off" checked="checked">{{ text_disabled }}</label>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab-api">
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-light bg-success">{{ entry_api_login }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="shipping_ll_cdek_api_login" value="{{ shipping_ll_cdek_api_login }}" class="form-control" />
+                  <small class="form-text text-muted">{{ help_api_key }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-light bg-success">{{ entry_api_key }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="shipping_ll_cdek_api_key" value="{{ shipping_ll_cdek_api_key }}" class="form-control" />
+                  <small class="form-text text-muted">{{ help_api_key }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-light bg-success">{{ entry_pickup_cities }}</label>
+                <div class="col-sm-10">
+                  <table id="cities" class="table table-striped table-bordered table-hover">
+                    <tbody>
+                      {% set city_row = 0 %}
+                      {% for shipping_ll_cdek_pickup_city in shipping_ll_cdek_pickup_cities %}
+                      <tr id="city-row-{{ city_row }}">
+                        <td class="text-left">
+                          <select name="shipping_ll_cdek_pickup_countries[]" class="shipping_ll_cdek_pickup_countries form-control" id="shipping_ll_cdek_pickup_countries_{{ city_row }}" onchange="getRegions(this.value, '{{ city_row }}');">
+                            <option value="0" selected="selected">{{ text_select_country }}</option>
+                            {% if countries %}
+                            {% for country in countries %}
+                              <option value="{{ country.id }}" {% if shipping_ll_cdek_pickup_countries[city_row] == country.id %}selected="selected"{% endif %}>{{ country.CountryName }}</option>
+                            {% endfor %}
+                            {% endif %}
+                          </select>
+                        </td>
+                        <td class="text-left">
+                          <script>
+                          $(document).ready(function() {
+                            getRegions('{{ shipping_ll_cdek_pickup_countries[city_row] }}', '{{ city_row }}', '{{ shipping_ll_cdek_pickup_regions[city_row] }}');
+                          });
+                          </script>
+                          <select name="shipping_ll_cdek_pickup_regions[]" class="shipping_ll_cdek_pickup_regions form-control" id="shipping_ll_cdek_pickup_regions_{{ city_row }}" onchange="getCities(this.value, '{{ city_row }}');"></select>
+                        </td>
+                        <td class="text-left">
+                          <script>
+                          $(document).ready(function() {
+                            getCities('{{ shipping_ll_cdek_pickup_regions[city_row] }}', '{{ city_row }}', '{{ shipping_ll_cdek_pickup_cities[city_row] }}');
+                          });
+                          </script>
+                          <select name="shipping_ll_cdek_pickup_cities[]" class="shipping_ll_cdek_pickup_cities form-control" id="shipping_ll_cdek_pickup_cities_{{ city_row }}"></select>
+                        </td>
+                        <td class="text-right">
+                          <button type="button" onclick="$('#city-row-{{ city_row }}').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button>
+                        </td>
+                      </tr>
+                      {% set city_row = city_row + 1 %}
+                      {% endfor %}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="4">
+                          <button type="button" onclick="addCity();" data-toggle="tooltip" title="{{ button_add }}" class="btn btn-success btn-block btn-sm"><i class="fa fa-plus-circle"></i></button>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                  <small class="form-text text-muted">{{ help_pickup_cities }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-light bg-success">{{ entry_currency }}</label>
+                <div class="col-sm-10">
+                  <select name="shipping_ll_cdek_currency" class="form-control">
+                    {% for currency in currencies %}
+                    <option value="{{ currency.code }}" {% if currency.code == shipping_ll_cdek_currency %}selected="selected"{% endif %}>{{ currency.title }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_consider }}</label>
+                <div class="col-sm-10">
+                  <div class="btn-group btn-group-toggle btn-group btn-group-toggle-toggle" data-toggle="buttons">
+                    {% if shipping_ll_cdek_consider %}
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_consider" value="1" autocomplete="off" checked="checked">{{ text_enabled }}</label>
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_consider" value="0" autocomplete="off">{{ text_disabled }}</label>
+                    {% else %}
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_consider" value="1" autocomplete="off">{{ text_enabled }}</label>
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_consider" value="0" autocomplete="off" checked="checked">{{ text_disabled }}</label>
+                    {% endif %}
+                  </div>
+                  <br><small class="form-text text-muted">{{ help_consider }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_cod }}</label>
+                <div class="col-sm-10">
+                  <div class="form-control" style="height: 150px; overflow: auto;">
+                    {% if payments %}
+                    {% for payment in payments %}
+                    <label class="form-check"><input type="checkbox" name="shipping_ll_cdek_cod[]" value="{{ payment.code }}" {% if payment.code in shipping_ll_cdek_cod %}checked="checked"{% endif %} class="form-check-input" /> {{ payment.name }}</label>
+                    {% endfor %}
+                    {% endif %}
+                  </div>
+                  <small class="form-text text-muted">{{ help_cod }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_service }}</label>
+                <div class="col-sm-10">
+                  <div class="form-control" style="height: 150px; overflow: auto;">
+                    {% if services %}
+                    {% for service in services %}
+                    <label class="form-check"><input type="checkbox" name="shipping_ll_cdek_services[]" value="{{ service.code }}" {% if service.code in shipping_ll_cdek_services %}checked="checked"{% endif %} class="form-check-input" /> {{ service.name }}</label>
+                    {% endfor %}
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_test }}</label>
+                <div class="col-sm-10">
+                  <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    {% if shipping_ll_cdek_test %}
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_test" value="1" autocomplete="off" checked="checked">{{ text_enabled }}</label>
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_test" value="0" autocomplete="off">{{ text_disabled }}</label>
+                    {% else %}
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_test" value="1" autocomplete="off">{{ text_enabled }}</label>
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_test" value="0" autocomplete="off" checked="checked">{{ text_disabled }}</label>
+                    {% endif %}
+                  </div>
+                  <br><small class="form-text text-muted">{{ help_test }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_cache }}</label>
+                <div class="col-sm-10">
+                  <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    {% if shipping_ll_cdek_cache %}
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_cache" value="1" autocomplete="off" checked="checked">{{ text_enabled }}</label>
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_cache" value="0" autocomplete="off">{{ text_disabled }}</label>
+                    {% else %}
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_cache" value="1" autocomplete="off">{{ text_enabled }}</label>
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_cache" value="0" autocomplete="off" checked="checked">{{ text_disabled }}</label>
+                    {% endif %}
+                  </div>
+                  <br><small class="form-text text-muted">{{ help_cache }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_timeout }}</label>
+                <div class="col-sm-10">
+                  <div class="input-group">
+                    <input type="text" name="shipping_ll_cdek_timeout" value="{{ shipping_ll_cdek_timeout }}" class="form-control" />
+                    <div class="input-group-append">
+                      <span class="input-group-text">{{ text_s }}</span>
+                    </div>
+                  </div>
+                  <small class="form-text text-muted">{{ help_timeout }}</small>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab-delivery">
+              <div class="row">
+                <div class="col-sm-2">
+                  <div class="list-group" id="delivery" role="tablist">
+                    {% for variant in variants %}
+                    <a class="list-group-item list-group-item-action {% if variant.code not in shipping_ll_cdek_admin_status %}sr-only{% endif %}" data-toggle="list" href="#tab-delivery-{{ variant.code }}" role="tab">{{ variant.name }}</a>
+                    {% endfor %}
+                  </div>
+                </div>
+                <div class="col-sm-10">
+                  <div class="tab-content">
+                    {% for variant in variants %}
+                    <div class="tab-pane" id="tab-delivery-{{ variant.code }}">
+                      <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">{{ entry_code }}</label>
+                        <div class="col-sm-10">
+                          <input type="text" value="{{ m }}.{{ m }}_{{ variant.code }}" class="form-control" readonly />
+                          <small class="form-text text-muted">{{ help_variant_code }}</small>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-sm-2 col-form-label text-light bg-success">{{ entry_status }}</label>
+                        <div class="col-sm-10">
+                          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            {% if attribute(_context, 'shipping_ll_cdek_status_' ~ variant.code) %}
+                            <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_status_{{ variant.code }}" value="1" autocomplete="off" checked="checked">{{ text_enabled }}</label>
+                            <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_status_{{ variant.code }}" value="0" autocomplete="off">{{ text_disabled }}</label>
+                            {% else %}
+                            <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_status_{{ variant.code }}" value="1" autocomplete="off">{{ text_enabled }}</label>
+                            <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_status_{{ variant.code }}" value="0" autocomplete="off" checked="checked">{{ text_disabled }}</label>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                      {% if variant.code in variants_map %}
+                      <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">{{ entry_list }}</label>
+                        <div class="col-sm-10">
+                          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            {% if attribute(_context, 'shipping_ll_cdek_list_' ~ variant.code) %}
+                            <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_list_{{ variant.code }}" value="1" autocomplete="off" checked="checked">{{ text_enabled }}</label>
+                            <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_list_{{ variant.code }}" value="0" autocomplete="off">{{ text_disabled }}</label>
+                            {% else %}
+                            <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_list_{{ variant.code }}" value="1" autocomplete="off">{{ text_enabled }}</label>
+                            <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_list_{{ variant.code }}" value="0" autocomplete="off" checked="checked">{{ text_disabled }}</label>
+                            {% endif %}
+                          </div>
+                          <br><small class="form-text text-muted">{{ help_variant_list }}</small>
+                        </div>
+                      </div>
+                      {% endif %}
+                      <div class="form-group row">
+                        <label class="col-sm-2 col-form-label text-light bg-success">{{ entry_quote_title }}</label>
+                        <div class="col-sm-10">
+                          <input type="text" name="shipping_ll_cdek_quote_title_{{ variant.code }}" value="{{ attribute(_context, 'shipping_ll_cdek_quote_title_' ~ variant.code) }}" class="form-control" />
+                          <small class="form-text text-muted">{{ help_variant_quote_title }}
+                            <br><code>{{ '{{logo}}' }}</code> - {{ text_logo }}
+                            <br><code>{{ '{{from_city}}' }}</code> - {{ text_from_city }}
+                            <br><code>{{ '{{to_city}}' }}</code> - {{ text_to_city }}
+                            <br><code>{{ '{{days}}' }}</code> - {{ text_days }}
+                            <br><code>{{ '{{date}}' }}</code> - {{ text_date }}
+                            {% if variant.code in variants_map %}
+                            <br><code>{{ '{{address}}' }}</code> - {{ text_address }}
+                            <br><code>{{ '{{code}}' }}</code> - {{ text_code }}
+                            {% endif %}
+                          </small>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">{{ entry_sort_order }}</label>
+                        <div class="col-sm-10">
+                          <input type="text" name="shipping_ll_cdek_sort_order_{{ variant.code }}" value="{{ attribute(_context, 'shipping_ll_cdek_sort_order_' ~ variant.code) }}" class="form-control" />
+                          <small class="form-text text-muted">{{ help_variant_sort_order }}</small>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">{{ entry_add_day }}</label>
+                        <div class="col-sm-10">
+                          <div class="input-group">
+                            <input type="text" name="shipping_ll_cdek_add_day_{{ variant.code }}" value="{{ attribute(_context, 'shipping_ll_cdek_add_day_' ~ variant.code) }}" class="form-control" />
+                            <div class="input-group-append">
+                              <span class="input-group-text">{{ text_dni }}</span>
+                            </div>
+                          </div>
+                          <small class="form-text text-muted">{{ help_variant_add_day }}</small>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">{{ entry_geo_zone }}</label>
+                        <div class="col-sm-10">
+                          <div class="form-control" style="height: 150px; overflow: auto;">
+                            {% for geo_zone in geo_zones %}
+                            <label class="form-check">
+                              {% if geo_zone.geo_zone_id in attribute(_context, 'shipping_ll_cdek_geo_zone_id_' ~ variant.code) %}
+                              <input type="checkbox" name="shipping_ll_cdek_geo_zone_id_{{ variant.code }}[]" value="{{ geo_zone.geo_zone_id }}" checked="checked" class="form-check-input" />
+                              {{ geo_zone.name }}
+                              {% else %}
+                              <input type="checkbox" name="shipping_ll_cdek_geo_zone_id_{{ variant.code }}[]" value="{{ geo_zone.geo_zone_id }}" class="form-check-input" />
+                              {{ geo_zone.name }}
+                              {% endif %}
+                            </label>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">{{ entry_exclude_city }}</label>
+                        <div class="col-sm-10">
+                          <input type="text" name="shipping_ll_cdek_exclude_city_{{ variant.code }}" value="{{ attribute(_context, 'shipping_ll_cdek_exclude_city_' ~ variant.code) }}" class="form-control" />
+                          <small class="form-text text-muted">{{ help_variant_cost_city }}</small>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <table id="costs-{{ variant.code }}" class="table table-striped table-bordered table-hover">
+                          <thead>
+                            <tr>
+                              <td class="text-center" colspan="8">{{ entry_shipping_cost }}</td>
+                            </tr>
+                            <tr>
+                              <td class="text-center" colspan="3">
+                                <small class="form-text text-muted" style="font-weight: normal;">{{ help_variant_cost_cost }}</small>
+                              </td>
+                              <td class="text-left" colspan="3" rowspan="2">
+                                {{ entry_value }}
+                                <br><small class="form-text text-muted" style="font-weight: normal;">{{ help_variant_cost_mod }}</small>
+                              </td>
+                              <td class="text-left" rowspan="2" style="width: 220px;">
+                                {{ entry_only_total }}
+                                <br><small class="form-text text-muted" style="font-weight: normal;">{{ help_variant_cost_total }}</small>
+                              </td>
+                              <td rowspan="2"></td>
+                            </tr>
+                            <tr>
+                              <td class="text-left">
+                                {{ entry_order_cost }}
+                              </td>
+                              <td class="text-left">
+                                {{ entry_geo_zone }}
+                              </td>
+                              <td class="text-left">
+                                {{ entry_city }}
+                                <br><small class="form-text text-muted" style="font-weight: normal;">{{ help_variant_cost_city }}</small>
+                              </td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% set row = 0 %}
+                            {% for cost in attribute(_context, 'shipping_ll_cdek_costs_' ~ variant.code) %}
+                            <tr id="cost-{{ variant.code }}-row-{{ row }}">
+                              <td class="text-left">
+                                <div class="input-group">
+                                  <input type="text" name="shipping_ll_cdek_costs_{{ variant.code }}[{{ row }}][cost]" value="{{ cost.cost }}" class="form-control" />
+                                  <div class="input-group-append">
+                                    <span class="input-group-text">{{ text_rub }}</span>
+                                  </div>
+                                </div>
+                              </td>
+                              <td class="text-left">
+                                <select name="shipping_ll_cdek_costs_{{ variant.code }}[{{ row }}][geo_zone_id]" class="form-control">
+                                  <option value="0" selected="selected">{{ text_none }}</option>
+                                  {% for geo_zone in geo_zones %}
+                                  {% if geo_zone.geo_zone_id == cost.geo_zone_id %}
+                                  <option value="{{ geo_zone.geo_zone_id }}" selected="selected">{{ geo_zone.name }}</option>
+                                  {% else %}
+                                  <option value="{{ geo_zone.geo_zone_id }}">{{ geo_zone.name }}</option>
+                                  {% endif %}
+                                  {% endfor %}
+                                </select>
+                              </td>
+                              <td class="text-left">
+                                <input type="text" name="shipping_ll_cdek_costs_{{ variant.code }}[{{ row }}][city]" value="{{ cost.city }}" class="form-control" />
+                              </td>
+                              <td class="text-left">
+                                <select name="shipping_ll_cdek_costs_{{ variant.code }}[{{ row }}][action]" class="form-control" style="min-width: 70px;">
+                                  <option value="+" {% if "+" == cost.action %}selected="selected"{% endif %}>+</option>
+                                  <option value="-" {% if "-" == cost.action %}selected="selected"{% endif %}>-</option>
+                                  <option value="=" {% if "=" == cost.action %}selected="selected"{% endif %}>=</option>
+                                </select>
+                              </td>
+                              <td class="text-left">
+                                <input type="text" name="shipping_ll_cdek_costs_{{ variant.code }}[{{ row }}][value]" value="{{ cost.value }}" class="form-control" />
+                              </td>
+                              <td class="text-left">
+                                <select name="shipping_ll_cdek_costs_{{ variant.code }}[{{ row }}][source]" class="form-control">
+                                  <option value="0" {% if 0 == cost.source %}selected="selected"{% endif %}>{{ text_rub }}</option>
+                                  <option value="1" {% if 1 == cost.source %}selected="selected"{% endif %}>{{ text_percent_order }}</option>
+                                  <option value="2" {% if 2 == cost.source %}selected="selected"{% endif %}>{{ text_percent_shipping }}</option>
+                                </select>
+                              </td>
+                              <td class="text-left">
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                  {% if cost.total %}
+                                  <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_costs_{{ variant.code }}[{{ row }}][total]" value="1" autocomplete="off" checked="checked">{{ text_enabled }}</label>
+                                  <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_costs_{{ variant.code }}[{{ row }}][total]" value="0" autocomplete="off">{{ text_disabled }}</label>
+                                  {% else %}
+                                  <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_costs_{{ variant.code }}[{{ row }}][total]" value="1" autocomplete="off">{{ text_enabled }}</label>
+                                  <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_costs_{{ variant.code }}[{{ row }}][total]" value="0" autocomplete="off" checked="checked">{{ text_disabled }}</label>
+                                  {% endif %}
+                                </div>
+                              </td>
+                              <td class="text-right">
+                                <button type="button" onclick="$('#cost-{{ variant.code }}-row-{{ row }}').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button>
+                              </td>
+                            </tr>
+                            {% set row = row + 1 %}
+                            {% endfor %}
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <td colspan="8">
+                                <button type="button" onclick="addCost('{{ variant.code }}');" data-toggle="tooltip" title="{{ button_add }}" class="btn btn-success btn-block btn-sm"><i class="fa fa-plus-circle"></i></button>
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                        <small class="form-text text-muted">{{ help_variant_cost_example }}</small>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_admin_status }}</label>
+                <div class="col-sm-10">
+                  <div class="form-control" style="height: 150px; overflow: auto;">
+                    {% for variant in variants %}
+                    <label class="form-check"><input type="checkbox" name="shipping_ll_cdek_admin_status[]" value="{{ variant.code }}" {% if variant.code in shipping_ll_cdek_admin_status %}checked="checked"{% endif %} class="form-check-input" /> {{ variant.name }}</label>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab-map">
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_status }}</label>
+                <div class="col-sm-10">
+                  <div class="btn-group btn-group-toggle btn-group btn-group-toggle-toggle" data-toggle="buttons">
+                    {% if shipping_ll_cdek_map_status %}
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_map_status" value="1" autocomplete="off" checked="checked">{{ text_enabled }}</label>
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_map_status" value="0" autocomplete="off">{{ text_disabled }}</label>
+                    {% else %}
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_map_status" value="1" autocomplete="off">{{ text_enabled }}</label>
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_map_status" value="0" autocomplete="off" checked="checked">{{ text_disabled }}</label>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_map_type }}</label>
+                <div class="col-sm-10">
+                  <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    {% if shipping_ll_cdek_map_type %}
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_map_type" value="0" autocomplete="off">{{ text_map_overall }}</label>
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_map_type" value="1" autocomplete="off" checked="checked">{{ text_map_individual }}</label>
+                    {% else %}
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_map_type" value="0" autocomplete="off" checked="checked">{{ text_map_overall }}</label>
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_map_type" value="1" autocomplete="off">{{ text_map_individual }}</label>
+                    {% endif %}
+                  </div>
+                  <br><small class="form-text text-muted">{{ help_map_type }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_map_key }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="shipping_ll_cdek_map_key" value="{{ shipping_ll_cdek_map_key }}" class="form-control" />
+                  <small class="form-text text-muted">{{ help_map_key }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_map_controls }}</label>
+                <div class="col-sm-10">
+                  <div class="form-control" style="height: 150px; overflow: auto;">
+                    {% for control in shipping_ll_cdek_map_controls %}
+                    <label class="form-check">
+                      {% if control.code in shipping_ll_cdek_map_control %}
+                      <input type="checkbox" name="shipping_ll_cdek_map_control[]" value="{{ control.code }}" checked="checked" class="form-check-input" />
+                      {{ control.name }}
+                      {% else %}
+                      <input type="checkbox" name="shipping_ll_cdek_map_control[]" value="{{ control.code }}" class="form-check-input" />
+                      {{ control.name }}
+                      {% endif %}
+                    </label>
+                    {% endfor %}
+                  </div>
+                  <small class="form-text text-muted">{{ help_map_control }}</small>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab-cap">
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_status }}</label>
+                <div class="col-sm-10">
+                  <div class="btn-group btn-group-toggle btn-group btn-group-toggle-toggle" data-toggle="buttons">
+                    {% if shipping_ll_cdek_cap_status %}
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_cap_status" value="1" autocomplete="off" checked="checked">{{ text_enabled }}</label>
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_cap_status" value="0" autocomplete="off">{{ text_disabled }}</label>
+                    {% else %}
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_cap_status" value="1" autocomplete="off">{{ text_enabled }}</label>
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_cap_status" value="0" autocomplete="off" checked="checked">{{ text_disabled }}</label>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_title }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="shipping_ll_cdek_cap_title" value="{{ shipping_ll_cdek_cap_title }}" class="form-control" />
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_cap_cost }}</label>
+                <div class="col-sm-10">
+                  <div class="input-group">
+                    <input type="text" name="shipping_ll_cdek_cap_cost" value="{{ shipping_ll_cdek_cap_cost }}" class="form-control" />
+                    <div class="input-group-append">
+                      <span class="input-group-text">{{ text_rub }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab-data">
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-light bg-success">{{ entry_data }}</label>
+                <div class="col-sm-10">
+                  <ul class="list-group">
+                    <li class="list-group-item">{{ text_total_countries }} <span class="badge badge-success">{{ total_countries }}</span></li>
+                    <li class="list-group-item">{{ text_total_regions }} <span class="badge badge-success">{{ total_regions }}</span></li>
+                    <li class="list-group-item">{{ text_total_cities }} <span class="badge badge-success">{{ total_cities }}</span></li>
+                    <li class="list-group-item">{{ text_total_pvzs }} <span class="badge badge-success">{{ total_pvzs }}</span></li>
+                  </ul>
+                  <br>
+                  <button type="button" onclick="updateData();" class="btn btn-danger btn-block btn-sm" id="ll_update_data" data-toggle="tooltip" title="{{ button_update }}"><i class="fa fa-redo"></i></button>
+                  <small class="form-text text-muted">{{ help_data }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_matching }}</label>
+                <div class="col-sm-10">
+                  <select name="country_id" class="form-control">
+                    <option value="0" selected="selected">{{ text_select_country }}</option>
+                    {% if countries %}
+                    {% for country in countries %}
+                    <option value="{{ country.id }}">{{ country.CountryName }}</option>
+                    {% endfor %}
+                    {% endif %}
+                  </select>
+                  <small class="form-text text-muted">{{ help_matching }}</small>
+                  <table id="regions" class="table table-striped table-bordered table-hover"></table>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab-log">
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_logging }}</label>
+                <div class="col-sm-10">
+                  <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    {% if shipping_ll_cdek_logging %}
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_logging" value="1" autocomplete="off" checked="checked">{{ text_enabled }}</label>
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_logging" value="0" autocomplete="off">{{ text_disabled }}</label>
+                    {% else %}
+                    <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_logging" value="1" autocomplete="off">{{ text_enabled }}</label>
+                    <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_logging" value="0" autocomplete="off" checked="checked">{{ text_disabled }}</label>
+                    {% endif %}
+                  </div>
+                  <br><small class="form-text text-muted">{{ help_logging }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_email }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="shipping_ll_cdek_email" value="{{ shipping_ll_cdek_email }}" class="form-control" />
+                  <small class="form-text text-muted">{{ help_email }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_notify }}</label>
+                <div class="col-sm-10">
+                  <div class="form-control" style="height: 150px; overflow: auto;">
+                    <label class="form-check">
+                      <input type="checkbox" name="shipping_ll_cdek_notify[]" value="0" {% if 0 in shipping_ll_cdek_notify %}checked="checked"{% endif %} class="form-check-input" /> {{ text_notify_0 }}</label>
+                    </label>
+                    <label class="form-check">
+                      <input type="checkbox" name="shipping_ll_cdek_notify[]" value="2" {% if 2 in shipping_ll_cdek_notify %}checked="checked"{% endif %} class="form-check-input" /> {{ text_notify_2 }}</label>
+                    </label>
+                    <label class="form-check">
+                      <input type="checkbox" name="shipping_ll_cdek_notify[]" value="1" {% if 1 in shipping_ll_cdek_notify %}checked="checked"{% endif %} class="form-check-input" /> {{ text_notify_1 }}</label>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab-support">
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ entry_license }}</label>
+                <div class="col-sm-10">
+                  <input type="hidden" value="{{ host }}" />
+                  <input type="text" name="shipping_ll_cdek_license" value="{{ shipping_ll_cdek_license }}" class="form-control" />
+                  <small class="form-text text-muted">{{ text_license }}</small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ text_developer }}</label>
+                <div class="col-sm-10"><a href="mailto:{{ email }}" class="btn">{{ email }}</a></div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ text_site }}</label>
+                <div class="col-sm-10"><a href="{{ site }}" target="_blank" class="btn">{{ site }}</a></div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ text_module_docs }}</label>
+                <div class="col-sm-10"><a href="{{ module_docs }}" target="_blank" class="btn">{{ module_docs }}</a></div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ text_delivery }}</label>
+                <div class="col-sm-10"><a href="{{ delivery }}" target="_blank" class="btn">{{ delivery }}</a></div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ text_api_docs }}</label>
+                <div class="col-sm-10"><a href="{{ api_docs }}" target="_blank" class="btn">{{ api_docs }}</a></div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="card-footer">
+        <img src="../image/catalog/{{ m }}/logo.png" alt="{{ heading_title }}" class="float-right">
+        <span class="badge badge-dark">{{ m }}</span>
+        <span class="badge badge-dark">{{ version }}</span>
+      </div>
+    </div>
+    {% else %}
+    <div class="card">
+      <div class="card-header">{{ heading_license }}</div>
+      <div class="card-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form">
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">{{ entry_license }}</label>
+            <div class="col-sm-10">
+              <input type="hidden" value="{{ host }}" />
+              <input type="text" name="shipping_ll_cdek_license" value="{{ shipping_ll_cdek_license }}" class="form-control" />
+              <small class="form-text text-muted">{{ text_license }}</small>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">{{ text_developer }}</label>
+            <div class="col-sm-10"><a href="mailto:{{ email }}" class="btn">{{ email }}</a></div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">{{ text_site }}</label>
+            <div class="col-sm-10"><a href="{{ site }}" target="_blank" class="btn">{{ site }}</a></div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">{{ text_module_docs }}</label>
+            <div class="col-sm-10"><a href="{{ module_docs }}" target="_blank" class="btn">{{ module_docs }}</a></div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">{{ text_delivery }}</label>
+            <div class="col-sm-10"><a href="{{ delivery }}" target="_blank" class="btn">{{ delivery }}</a></div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">{{ text_api_docs }}</label>
+            <div class="col-sm-10"><a href="{{ api_docs }}" target="_blank" class="btn">{{ api_docs }}</a></div>
+          </div>
+        </form>
+      </div>
+      <div class="card-footer">
+        <img src="../image/catalog/{{ m }}/logo.png" alt="{{ heading_title }}" class="float-right">
+        <span class="badge badge-dark">{{ m }}</span>
+        <span class="badge badge-dark">{{ version }}</span>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% if shipping_ll_cdek_license %}
+<script type="text/javascript"><!--
+$('#delivery a:not(".sr-only"):first').tab('show');
+
+var city_row = {{ city_row }};
+
+function addCity() {
+  html  = '<tr id="city-row-' + city_row + '">';
+  html += '  <td class="text-left">';
+  html += '    <select name="shipping_ll_cdek_pickup_countries[]" class="shipping_ll_cdek_pickup_countries form-control" id="shipping_ll_cdek_pickup_countries_' + city_row + '" onchange="getRegions(this.value, ' + city_row + ');">';
+  html += '      <option value="0" selected="selected">{{ text_select_country }}</option>';
+  {% if countries %}
+  {% for country in countries %}
+  html += '      <option value="{{ country.id }}">{{ country.CountryName }}</option>';
+  {% endfor %}
+  {% endif %}
+  html += '    </select>';
+  html += '  </td>';
+  html += '  <td class="text-left">';
+  html += '    <select name="shipping_ll_cdek_pickup_regions[]" class="shipping_ll_cdek_pickup_regions form-control" id="shipping_ll_cdek_pickup_regions_' + city_row + '" onchange="getCities(this.value, ' + city_row + ');">';
+  html += '      <option>{{ text_no_data }}</option>';
+  html += '    </select>';
+  html += '  </td>';
+  html += '  <td class="text-left">';
+  html += '    <select name="shipping_ll_cdek_pickup_cities[]" class="shipping_ll_cdek_pickup_cities form-control" id="shipping_ll_cdek_pickup_cities_' + city_row + '">';
+  html += '      <option>{{ text_no_data }}</option>';
+  html += '    </select>';
+  html += '  </td>';
+  html += '  <td class="text-right"><button type="button" onclick="$(\'#city-row-' + city_row  + '\').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>';
+  html += '</tr>';
+
+  $('#cities tbody').append(html);
+
+  city_row++;
+}
+
+var row = {};
+
+{% for variant in variants %}
+row['{{ variant.code }}'] = {{ attribute(_context, 'shipping_ll_cdek_costs_' ~ variant.code)|length }};
+{% endfor %}
+
+function addCost(code) {
+  html  = '<tr id="cost-' + code + '-row-' + row[code] + '">';
+  html += '  <td class="text-left">';
+  html += '    <div class="input-group">';
+  html += '      <input type="text" name="shipping_ll_cdek_costs_' + code + '[' + row[code] + '][cost]" value="" class="form-control" />';
+  html += '      <div class="input-group-append">';
+  html += '        <span class="input-group-text">{{ text_rub }}</span>';
+  html += '      </div>';
+  html += '    </div>';
+  html += '  </td>';
+  html += '  <td class="text-left">';
+  html += '    <select name="shipping_ll_cdek_costs_' + code + '[' + row[code] + '][geo_zone_id]" class="form-control">';
+  html += '      <option value="0" selected="selected">{{ text_none }}</option>';
+  {% for geo_zone in geo_zones %}
+  html += '      <option value="{{ geo_zone.geo_zone_id }}">{{ geo_zone.name }}</option>';
+  {% endfor %}
+  html += '    </select>';
+  html += '  </td>';
+  html += '  <td class="text-left">';
+  html += '    <input type="text" name="shipping_ll_cdek_costs_' + code + '[' + row[code] + '][city]" value="" class="form-control" />';
+  html += '  </td>';
+  html += '  <td class="text-left">';
+  html += '    <select name="shipping_ll_cdek_costs_' + code + '[' + row[code] + '][action]" class="form-control" style="min-width: 70px;">';
+  html += '      <option value="+">+</option>';
+  html += '      <option value="-">-</option>';
+  html += '      <option value="=">=</option>';
+  html += '    </select>';
+  html += '  </td>';
+  html += '  <td class="text-left"><input type="text" name="shipping_ll_cdek_costs_' + code + '[' + row[code] + '][value]" value="" class="form-control" /></td>';
+  html += '  <td class="text-left">';
+  html += '    <select name="shipping_ll_cdek_costs_' + code + '[' + row[code] + '][source]" class="form-control">';
+  html += '      <option value="0">{{ text_rub }}</option>';
+  html += '      <option value="1">{{ text_percent_order }}</option>';
+  html += '      <option value="2">{{ text_percent_shipping }}</option>';
+  html += '    </select>';
+  html += '  </td>';
+  html += '  <td class="text-left">';
+  html += '    <div class="btn-group btn-group-toggle" data-toggle="buttons">';
+  html += '      <label class="btn btn-outline-secondary"><input type="radio" name="shipping_ll_cdek_costs_' + code + '[' + row[code] + '][total]" value="1" autocomplete="off">{{ text_enabled }}</label>';
+  html += '      <label class="btn btn-outline-secondary active"><input type="radio" name="shipping_ll_cdek_costs_' + code + '[' + row[code] + '][total]" value="0" autocomplete="off" checked="checked">{{ text_disabled }}</label>';
+  html += '    </div>';
+  html += '  </td>';
+  html += '  <td class="text-right"><button type="button" onclick="$(\'#cost-' + code + '-row-' + row[code] + '\').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>';
+  html += '</tr>';
+
+  $("#costs-" + code + " tbody").append(html);
+
+  row[code]++;
+}
+
+function getRegions(country_id, row, active) {
+  var id = '#shipping_ll_cdek_pickup_countries_' + row,
+      html = '<option>{{ text_no_data }}</option>';
+
+  $(id).parent().parent().find('.shipping_ll_cdek_pickup_regions').html(html);
+  $(id).parent().parent().find('.shipping_ll_cdek_pickup_cities').html(html);
+
+  $.ajax({
+    url: 'index.php?route=extension/shipping/ll_cdek/getRegions&user_token={{ user_token }}&country_id=' + country_id,
+    dataType: 'json',
+    beforeSend: function() {
+      $(id).after(' <i class="fa fa-circle-o-notch fa-spin"></i>');
+    },
+    complete: function() {
+      $(id).next('.fa-spin').remove();
+    },
+    success: function(json) {
+      if (json && json.length > 0) {
+        html = '<option value="0" selected="selected">{{ text_select_region }}</option>';
+
+        for (i = 0; i < json.length; i++) {
+          if (active && json[i]['id'] == active) {
+            html += '<option value="' + json[i]['id'] + '" selected="selected">' + json[i]['OblName'] + '</option>';
+          } else {
+            html += '<option value="' + json[i]['id'] + '">' + json[i]['OblName'] + '</option>';
+          }
+        }
+
+        $(id).parent().parent().find('.shipping_ll_cdek_pickup_regions').html(html);
+      }
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    }
+  });
+}
+
+function getCities(region_id, row, active) {
+  var id = '#shipping_ll_cdek_pickup_countries_' + row,
+      html = '<option>{{ text_no_data }}</option>';
+
+  $.ajax({
+    url: 'index.php?route=extension/shipping/ll_cdek/getCities&user_token={{ user_token }}&region_id=' + region_id,
+    dataType: 'json',
+    beforeSend: function() {
+      $(id).after(' <i class="fa fa-circle-o-notch fa-spin"></i>');
+    },
+    complete: function() {
+      $(id).next('.fa-spin').remove();
+    },
+    success: function(json) {
+      if (json && json.length > 0) {
+        html = '<option value="0" selected="selected">{{ text_select_city }}</option>';
+
+        for (i = 0; i < json.length; i++) {
+          if (active && json[i]['CityCode'] == active) {
+            html += '<option value="' + json[i]['CityCode'] + '" selected="selected">' + json[i]['CityName'] + '</option>';
+          } else {
+            html += '<option value="' + json[i]['CityCode'] + '">' + json[i]['CityName'] + '</option>';
+          }
+        }
+      }
+
+      $(id).parent().parent().find('.shipping_ll_cdek_pickup_cities').html(html);
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    }
+  });
+}
+
+function updateData(current = 0, type = 0) {
+  $.ajax({
+    url: 'index.php?route=extension/shipping/ll_cdek/updateData&user_token={{ user_token }}',
+    type: 'post',
+    data: 'current=' + current + '&type=' + type,
+    dataType: 'json',
+    beforeSend: function() {
+      $('#ll_update_data').button('loading');
+    },
+    success: function(json) {
+      $('.alert,.progress').remove();
+
+      if (json['finish']) {
+        if (json['type'] == 0) {
+          $('#content > .container-fluid').prepend('<div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> ' + json['finish'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+          $('#content > .container-fluid').prepend('<div class="progress"><div class="progress-bar bg-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">100%</div></div>');
+
+          updateData(0, 1);
+        } else {
+          $('#ll_update_data').button('reset');
+          $('#content > .container-fluid').prepend('<div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> ' + json['finish'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+          $('#content > .container-fluid').prepend('<div class="progress"><div class="progress-bar bg-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">100%</div></div>');
+        }
+      }
+
+      if (json['success']) {
+        var percent = Math.round(json['current'] / (json['total'] / 100));
+
+        $('#content > .container-fluid').prepend('<div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+        $('#content > .container-fluid').prepend('<div class="progress"><div class="progress-bar bg-success progress-bar-striped active" role="progressbar" aria-valuenow="' + percent + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + percent + '%;">' + percent + '%</div></div>');
+
+        updateData(json['current'], json['type']);
+      }
+
+      if (json['error']) {
+        $('#content > .container-fluid').prepend('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+      }
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    }
+  });
+}
+
+$('select[name=\'country_id\']').on('change', function() {
+  if (this.value > 0) {
+    $.ajax({
+      url: 'index.php?route=extension/shipping/ll_cdek/getRegionsTable&user_token={{ user_token }}&country_id=' + this.value,
+      dataType: 'json',
+      success: function(json) {
+        if (json['zones'] && json['zones'] != '' && json['regions'] && json['regions'] != '') {
+          html = '<tbody><thead><tr><td>{{ text_region_shipping }}</td><td>{{ text_region_opencart }}</td></tr></thead>';
+
+          for (r = 0; r < json['regions'].length; r++) {
+            if (json['regions'][r]['OblName'] == '') continue;
+
+            html += ' <tr>';
+            html += '  <td class="text-left">';
+            html += '    <input type="text" value="' + json['regions'][r]['OblName'] + '" class="form-control" disabled />';
+            html += '  </td>';
+            html += '  <td class="text-left">';
+            html += '    <select name="shipping_ll_cdek_regions[' + json['regions'][r]['id'] + '][]" class="form-control shipping_ll_cdek_regions" multiple style="height: 100px !important;">';
+
+            for (i = 0; i < json['zones'].length; i++) {
+              html += '      <option value="' + json['zones'][i]['zone_id'] + '"';
+
+              if (json['regions'][r]['zones'].includes(json['zones'][i]['zone_id'])) {
+                html += ' selected="selected"';
+              }
+
+              html += '>' + json['zones'][i]['name'] + '</option>';
+            }
+
+            html += '    </select>';
+            html += '  </td>';
+            html += ' </tr>';
+          }
+
+          html += '</tbody>';
+          html += '<tfoot>';
+          html += ' <tr>';
+          html += '   <td colspan="2">';
+          html += '     <button type="button" onclick="updateRegionToZone();" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-success btn-block btn-sm"><i class="fa fa-save"></i></button>';
+          html += '   </td>';
+          html += ' </tr>';
+          html += '</tfoot>';
+
+          $('#regions').html(html);
+        }
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      }
+    });
+  } else {
+    $('#regions').html('');
+  }
+});
+
+function updateRegionToZone() {
+  $.ajax({
+    url: 'index.php?route=extension/shipping/ll_cdek/updateRegionToZone&user_token={{ user_token }}&' + $('.shipping_ll_cdek_regions').serialize(),
+    dataType: 'json',
+    success: function(json) {
+      $('.alert').remove();
+      $('#regions').html('');
+      $('select[name=\'country_id\']').val(0);
+
+      if (json['success']) {
+        $('#content > .container-fluid').prepend('<div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+      }
+
+      if (json['error']) {
+        $('#content > .container-fluid').prepend('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+      }
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    }
+  });
+}
+//--></script>
+{% endif %}
+{{ footer }} 
